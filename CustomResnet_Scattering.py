@@ -135,16 +135,16 @@ class ResidualBlock(nn.Module):
         return relu(output)
 
 
-class ResNet34(nn.Module):
+class ResNet(nn.Module):
     """
-    This Module contains ResNet34 model.
+    This Module contains ResNet model.
     Attributes:
         num_classes (int): Number of classes in the dataset.
     """
 
     def __init__(self, num_classes):
         super().__init__()
-        self.name = 'ResNet34'
+        self.name = 'ResNet'
         self.init_conv = nn.Sequential(
             nn.BatchNorm2d(51, eps=1e-5, affine=False),
             nn.Conv2d(51, 32,
@@ -156,38 +156,20 @@ class ResNet34(nn.Module):
             ResidualBlock(32, 64),
             ResidualBlock(64, 64), ResidualBlock(64, 64),ResidualBlock(64, 64),
             ResidualBlock(64, 64),ResidualBlock(64, 64),ResidualBlock(64, 64),
-            ResidualBlock(64, 64),ResidualBlock(64, 64),
 
-            ResidualBlock(64, 128), ResidualBlock(128, 128),
-            ResidualBlock(128, 128), ResidualBlock(128, 128),ResidualBlock(128, 128),
+            ResidualBlock(64, 128), ResidualBlock(128, 128),ResidualBlock(128, 128),
             ResidualBlock(128, 128),ResidualBlock(128, 128),ResidualBlock(128, 128),
             ResidualBlock(128, 128), nn.AdaptiveAvgPool2d(2),
 
             Flatten(), nn.Linear(512, num_classes))
-        # self._init_weights()
-
+        
     def forward(self, x):
         """
-        Performs the Resnet34 model.
+        Performs the Resnet model.
         Returns:
-            Model: final ResNet34 model.
+            Model: final ResNet model.
         """
         x = x.view(x.size(0), 51, 16, 16)
         x = self.init_conv(x)
         return self.model(x)
-
-    def _init_weights(self):
-        """
-         Initializes the weights according to the model
-         layers.
-        """
-        for m in self.modules():
-            if isinstance(m, nn.Conv2d):
-                n = m.kernel_size[0] * m.kernel_size[1] * m.out_channels
-                m.weight.data.normal_(0, math.sqrt(2. / n))
-            elif isinstance(m, nn.BatchNorm2d):
-                m.weight.data.fill_(1)
-                m.bias.data.zero_()
-
-
 
