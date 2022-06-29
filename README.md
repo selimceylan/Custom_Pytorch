@@ -1,2 +1,2 @@
 # Custom_Pytorch
-Custom_Pytorch_Code
+Scattering Pytorch Code
